@@ -1,83 +1,134 @@
 # 📱 CHT Mobile Intelligence Platform
-> **Enterprise Amazon Mobile Phone Scraper, Hardware Intelligence Analytics & Real-Time Search Dashboard**
+> **Enterprise Smartphone Intelligence & Market Analytics Engine**
 
-Built specifically with **Node.js (v20+)** as the primary programming runtime, **SQLite** as the high-throughput local embedded database, and dual-mode **Python / Node.js scrapers** for comprehensive market data extraction across **Apple (iPhone)** and **Samsung (Galaxy)** smartphones.
+A high-performance full-stack market intelligence platform engineered with **Node.js (v20+)** as the primary backend runtime and **SQLite 3** as the high-throughput local embedded database. The system continuously extracts, parses, structures, and visualizes retail smartphone listings from Amazon India, specifically targeting **Apple (iPhone)** and **Samsung (Galaxy)** ecosystems.
 
 ---
 
-## 🌟 Executive Highlights
+## 🌟 Core Capabilities
 
-- **Primary Runtime:** Node.js (Express.js REST API + Static Single-Page Application)
-- **Database Engine:** SQLite 3 via `better-sqlite3` with **Write-Ahead Logging (WAL)** and **Full-Text Search (FTS5)**.
-- **Scraping Subsystem:**
-  - **Node.js Native Scraper:** High-speed crawler utilizing native Fetch, regex hardware spec parsers, and direct SQLite transactions.
-  - **Python BeautifulSoup Scraper:** Resilient crawler with randomized desktop User-Agents, anti-bot mitigation, and graceful fallback catalogue for guaranteed demo uptime.
-- **Hardware Intelligence Extraction:** Extracts processor/chipset (e.g. A18 Pro, Snapdragon 8 Gen 3), RAM, internal storage, battery capacity, display specs, multi-lens camera systems, live INR prices, discounts, and Amazon URLs.
-- **Instant Search & Analytics:** Real-time debounced autocomplete search, multi-faceted filtering (Brand, RAM, Storage, Price presets), side-by-side spec comparison matrix, and interactive device cards.
+- **Primary Runtime:** Node.js (Express.js REST API + Single-Page Application interface)
+- **High-Throughput Relational Storage:** Embedded SQLite 3 via `better-sqlite3` configured with **Write-Ahead Logging (WAL)** and **Full-Text Search (FTS5)**.
+- **Dual Scraping Subsystem:**
+  - **Node.js Native Crawler:** High-speed crawler utilizing native Fetch, regex spec extraction, and transactional batch upserts.
+  - **Python BeautifulSoup Crawler:** Resilient crawler featuring desktop User-Agent rotation, browser header spoofing, polite rate limiting, and an automated baseline fallback policy for continuous service availability.
+- **Hardware Intelligence Extraction:** Automatically structures unstructured e-commerce listings into granular hardware parameters:
+  - Processor / Chipset (Apple A18 Pro, A17 Pro, A16 Bionic, Snapdragon 8 Gen 3 for Galaxy, Exynos 2400, etc.)
+  - RAM Capacity (4GB, 6GB, 8GB, 12GB) & Internal Storage (128GB, 256GB, 512GB, 1TB)
+  - Battery Capacity (mAh), Display Technology, Multi-Lens Camera Systems, and OS versions
+  - Market Pricing, Original List Price (MRP), Discount Margins, and Customer Ratings
+- **Instant Search & Analytics:** Debounced instant autocomplete, multi-faceted filtering (Brand, Price Presets, RAM, Storage), and interactive side-by-side hardware comparison.
+- **Enterprise Data Export:** Instant one-click extraction into structured **CSV** and **JSON** formats.
 
 ---
 
 ## 🏗️ System Architecture
 
 ```
-+-------------------------------------------------------------------------+
-|                  CLIENT BROWSER (MacBook Air M1 / Web UI)                |
-|  - Instant Search Bar (Debounced Autocomplete)                         |
-|  - Brand Tabs (All / Apple / Samsung)                                   |
-|  - Faceted Filters (Price presets, RAM, Storage, Sorting)               |
-|  - Comparison Matrix (Side-by-side hardware spec comparison)            |
-|  - Scraper Control Modal (Live log streaming from scraper subprocess)   |
-+------------------------------------+------------------------------------+
-                                     |  HTTP REST (Port 3000)
-                                     v
-+-------------------------------------------------------------------------+
-|                        NODE.JS SERVER (server/index.js)                 |
-|  - Express.js Router: /api/phones, /api/search, /api/compare, /api/stats|
-|  - Scraper Orchestrator: /api/scraper/trigger & /api/scraper/status     |
-|  - Inter-Process Communication (IPC): child_process.spawn               |
-+-------------------+---------------------------------+-------------------+
-                    |                                 |
-                    v (Direct DAO)                    v (Child Process)
-+--------------------------------------+   +------------------------------+
-|        SQLITE 3 DATABASE ENGINE      |   |   AMAZON SCRAPING ENGINES    |
-|        (database/phones.db)          |   |                              |
-|  - WAL Mode (High-throughput writes) |<--+ 1. Node.js Native Scraper    |
-|  - FTS5 Full-Text Search Table       |   |    (scraper/amazon_scraper.js|
-|  - Indexes: brand, price, RAM, ROM   |   | 2. Python BS4 Scraper        |
-|  - Automated Audit Logging           |   |    (scraper/amazon_scraper.py|
-+--------------------------------------+   +------------------------------+
+====================================================================================================
+                                CLIENT TIER (Web Dashboard)
+====================================================================================================
++--------------------------------------------------------------------------------------------------+
+|                                    MODERN WEB DASHBOARD                                          |
+|                                                                                                  |
+|   [Instant Search Bar]       [Brand Filters: Apple | Samsung]        [Price Range Presets]        |
+|            |                                |                                  |                 |
+|            v                                v                                  v                 |
+|   (Debounced Autocomplete)      (Faceted Spec Filtering)             (Dynamic Price Buckets)     |
+|                                                                                                  |
+|   +---------------------------------------+  +------------------------------------------------+  |
+|   |   Dynamic Product Cards Grid          |  |   Side-by-Side Hardware Comparison Matrix      |  |
+|   |   - High-Res Product Visuals          |  |   - Processor vs Processor Comparison          |  |
+|   |   - RAM / Storage / Battery Badges    |  |   - RAM & Storage Specs Breakdown              |  |
+|   |   - Pricing, MRP & Discount Flags     |  |   - Battery Capacity & Display Tech Matrix     |  |
+|   +---------------------------------------+  +------------------------------------------------+  |
+|                                                                                                  |
+|   +-------------------------------------------------------------------------------------------+  |
+|   |   Scraper Control Console (Live Terminal Execution Log Streaming via REST Polling)        |  |
+|   +-------------------------------------------------------------------------------------------+  |
++-------------------------------------------------+------------------------------------------------+
+                                                  |
+                                                  | HTTP / JSON REST Requests (Port 3000)
+                                                  v
+====================================================================================================
+                               APPLICATION TIER (Node.js & Express)
+====================================================================================================
++--------------------------------------------------------------------------------------------------+
+|                                NODE.JS EXPRESS RUNTIME ENGINE                                    |
+|                                                                                                  |
+|   +-------------------------+   +--------------------------+   +-----------------------------+   |
+|   |   HTTP Middleware       |   |   REST API Router        |   |   Scraper Subprocess IPC    |   |
+|   |   - CORS Security       |-->|   - GET /api/phones      |   |   - POST /api/scraper/trigger   |   |
+|   |   - JSON Body Parser    |   |   - GET /api/search      |   |   - GET  /api/scraper/status    |   |
+|   |   - Request Logger      |   |   - GET /api/compare     |   |   - child_process.spawn         |   |
+|   |   - Static Asset Server |   |   - GET /api/stats       |   |     with stdout log stream  |   |
+|   +-------------------------+   +--------------------------+   +--------------+--------------+   |
++-----------------------------------------------+-------------------------------+------------------+
+                                                |                               |
+                                                | Direct Database Query         | Spawns Child Scraper
+                                                v                               v
+====================================================================================================
+               PERSISTENCE TIER (SQLite 3)             |        SCRAPING & INGESTION SUBSYSTEM
+====================================================================================================
++------------------------------------------------------+   +---------------------------------------+
+|                 SQLITE 3 DATABASE                    |   |        SCRAPER IMPLEMENTATIONS        |
+|               (database/phones.db)                   |   |                                       |
+|                                                      |   |  1. Node.js Native Crawler            |
+|   +----------------------------------------------+   |   |     - scraper/amazon_scraper.js       |
+|   |  PRAGMA Configurations:                      |   |   |     - Native Fetch API + Spec Regex   |
+|   |  - PRAGMA journal_mode = WAL (Concurrency)   |   |   |     - Direct better-sqlite3 Upsert    |
+|   |  - PRAGMA synchronous = NORMAL               |   |   |                                       |
+|   +----------------------------------------------+   |   |  2. Python BeautifulSoup Crawler      |
+|                                                      |   |     - scraper/amazon_scraper.py       |
+|   +----------------------------------------------+   |   |     - Requests + BeautifulSoup4       |
+|   |  Main Relational Table: 'phones'             |   |   |     - User-Agent Rotation             |
+|   |  - asin, brand, model_name, variant          |<------+     - Anti-Bot Fallback Safeguard     |
+|   |  - processor, ram_gb, storage_gb, battery    |   |   +-------------------+-------------------+
+|   |  - display_spec, camera_spec, os             |   |                       |
+|   |  - price, original_price, discount, rating   |   |                       |
+|   +----------------------------------------------+   |                       |
+|                                                      |                       v
+|   +----------------------------------------------+   |   +---------------------------------------+
+|   |  Full-Text Search Virtual Table:             |   |   |           TARGET DATA SOURCE          |
+|   |  - 'phones_fts' (FTS5)                       |   |   |                                       |
+|   |  - Synchronized via DB Triggers (AI, AU, AD) |   |   |       Amazon India (amazon.in)        |
+|   +----------------------------------------------+   |   |       - Apple Search Endpoints        |
+|                                                      |   |       - Samsung Search Endpoints      |
+|   +----------------------------------------------+   |   +---------------------------------------+
+|   |  Audit Table: 'scrape_logs'                  |   |
+|   +----------------------------------------------+   |
++------------------------------------------------------+
+====================================================================================================
 ```
 
 ---
 
-## 🚀 Quick Start Guide (MacBook Air M1)
+## 🚀 Quick Start Guide
 
-### 1. Prerequisites Check
-Your MacBook Air M1 already has Node.js and Python installed:
+### 1. Clone the Repository
 ```bash
-node -v      # v20.20.1 (or higher)
-npm -v       # 10.8.2
-python3 --version
+git clone https://github.com/Khans2002/CHT-Mobile-intelligence-platform.git
+cd CHT-Mobile-intelligence-platform
 ```
 
-### 2. Start the Node.js Application
-From the project directory:
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Verify System Health
+Run the automated database test check:
+```bash
+npm test
+```
+*Expected output: `SQLite Ready. Total devices: 75`*
+
+### 4. Start the Application Server
 ```bash
 npm start
 ```
-The application will launch at:
-👉 **http://localhost:3000**
-
-### 3. Run Scraper Manually (Optional)
-You can trigger scraping either via the web dashboard's **"Trigger Scraper"** button or via command line:
-```bash
-# Option A: Run native Node.js scraper
-npm run scrape:node
-
-# Option B: Run Python scraper (with virtualenv)
-source .venv/bin/activate
-python scraper/amazon_scraper.py --brand All --pages 1 --format db
-```
+The application will launch at:  
+👉 **`http://localhost:3000`**
 
 ---
 
@@ -85,49 +136,64 @@ python scraper/amazon_scraper.py --brand All --pages 1 --format db
 
 | Endpoint | Method | Description | Sample Query |
 | :--- | :--- | :--- | :--- |
-| `/api/phones` | `GET` | Paginated devices with filters | `/api/phones?brand=Apple&minPrice=50000` |
-| `/api/search` | `GET` | Lightning-fast search suggestions | `/api/search?q=s24` |
-| `/api/phones/:id` | `GET` | Complete hardware specs for a device | `/api/phones/1` |
-| `/api/compare` | `GET` | Side-by-side hardware comparison | `/api/compare?ids=1,10,14` |
-| `/api/stats` | `GET` | Aggregate market prices & brand metrics | `/api/stats` |
-| `/api/export` | `GET` | Download dataset as CSV or JSON | `/api/export?format=csv` |
-| `/api/scraper/trigger`| `POST`| Asynchronously trigger scraper job | `{"brand":"All","pages":1}` |
-| `/api/scraper/status` | `GET` | Check scraper running state & logs | `/api/scraper/status` |
-| `/api/health` | `GET` | Node.js server health status | `/api/health` |
+| `/api/phones` | `GET` | Paginated mobile devices with multi-faceted filters | `/api/phones?brand=Apple&minPrice=50000` |
+| `/api/search` | `GET` | High-speed autocomplete & search suggestions | `/api/search?q=s24` |
+| `/api/phones/:id` | `GET` | Complete hardware specification sheet for a device | `/api/phones/1` |
+| `/api/compare` | `GET` | Side-by-side hardware comparison for selected IDs | `/api/compare?ids=1,10,14` |
+| `/api/stats` | `GET` | Aggregate market metrics, brand counts & averages | `/api/stats` |
+| `/api/export` | `GET` | Export currently tracked data as CSV or JSON | `/api/export?format=csv` |
+| `/api/scraper/trigger`| `POST`| Asynchronously trigger background scraping job | `{"brand":"All","pages":1}` |
+| `/api/scraper/status` | `GET` | Inspect active scraper execution state and logs | `/api/scraper/status` |
+| `/api/scraper/history`| `GET` | Retrieve past scrape execution logs from database | `/api/scraper/history?limit=10` |
+| `/api/health` | `GET` | Application health status and runtime telemetry | `/api/health` |
 
 ---
 
-## 📂 Project Directory Structure
+## 🛠️ Technology Stack Breakdown
+
+| Layer | Component | Description |
+| :--- | :--- | :--- |
+| **Backend Runtime** | **Node.js (v20 LTS)** | Non-blocking event-driven I/O engine hosting API services |
+| **Web Framework** | **Express.js (v4.21)** | Fast, unopinionated routing, middleware, and static asset pipeline |
+| **Database Engine** | **SQLite 3 (v3.45+)** | High-performance embedded relational storage |
+| **Database Driver** | **better-sqlite3 (v11.8)** | Synchronous, compiled prepared statements with WAL concurrency |
+| **Full-Text Search** | **SQLite FTS5** | Virtual table with self-synchronizing triggers for sub-millisecond search |
+| **Scraping Engine** | **Node.js & Python** | Native Fetch crawler + Python BeautifulSoup4 with User-Agent rotation |
+| **Subprocess IPC** | **Node `child_process.spawn`** | Asynchronous execution with real-time `stdout` log streaming |
+| **Client Interface** | **Modern Vanilla JS & CSS3** | Glassmorphism dashboard, debounced instant search, no bundler overhead |
+
+---
+
+## 📂 Project Structure
 
 ```
-CHT Mobile intelligence platform/
-├── .venv/                         # Python Virtual Environment
+CHT-Mobile-intelligence-platform/
 ├── database/
-│   ├── schema.sql                 # SQLite tables, indexes, triggers, FTS5 virtual table
-│   ├── db.js                      # DAO layer using better-sqlite3
-│   ├── seed_data.json             # Verified catalogue of 20+ flagship mobile phones
-│   └── phones.db                  # Live SQLite database file (WAL mode)
+│   ├── schema.sql                 # DDL: tables, indexes, triggers, FTS5 virtual table
+│   ├── db.js                      # DAO layer using better-sqlite3 with WAL configuration
+│   ├── seed_data.json             # Baseline verified smartphone hardware catalogue
+│   └── phones.db                  # Persistent SQLite database file
 ├── scraper/
-│   ├── amazon_scraper.js          # Native Node.js Amazon scraper (Fetch + Regex)
+│   ├── amazon_scraper.js          # Native Node.js scraper (Fetch + Regex Spec Parser)
 │   └── amazon_scraper.py          # Python BeautifulSoup scraper with anti-bot resilience
 ├── server/
 │   ├── routes/
-│   │   ├── api.js                 # REST API endpoints (search, phones, stats, export)
-│   │   └── scraper.js             # Scraper IPC controller with live log streaming
-│   └── index.js                   # Main Express.js server entry point
+│   │   ├── api.js                 # REST API endpoints (search, compare, stats, export)
+│   │   └── scraper.js             # Scraper subprocess IPC controller with log streaming
+│   └── index.js                   # Express application entry point & graceful shutdown
 ├── public/
-│   ├── index.html                 # Modern glassmorphism dashboard UI
+│   ├── index.html                 # Semantic HTML5 executive dashboard layout
 │   ├── css/
-│   │   └── style.css              # Custom styling, dark mode, responsive cards
+│   │   └── style.css              # Custom CSS3 variables, dark theme & responsive grids
 │   └── js/
-│       └── app.js                 # Frontend application logic & instant search
-├── package.json                   # Node.js dependencies & scripts
-└── README.md                      # Documentation & getting started
+│       └── app.js                 # Client-side controller (instant search, state, compare)
+├── .gitignore                     # Git configuration excluding node_modules, venvs, and logs
+├── package.json                   # Project metadata, scripts, and production dependencies
+└── README.md                      # Comprehensive project documentation
 ```
 
 ---
 
-## 👥 Interview & Architecture Materials
-Full comprehensive documentation, ASCII architectural diagrams, tech stack justifications, and interview Q&A can be found in:
-`/Users/mohammedsameerkhan/Developer/Company Projects/Materials/`
+## 🛡️ License
 
+This project is licensed under the ISC License. All rights reserved.

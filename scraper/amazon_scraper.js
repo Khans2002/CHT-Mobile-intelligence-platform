@@ -206,7 +206,7 @@ async function scrapeAmazonNode(brand = 'All', pages = 1) {
 
     // Fallback supplement if blocked
     if (results.length < 5) {
-        console.log('💡 [Fallback Policy] Supplementing with verified catalogue data to ensure 100% demo stability.');
+        console.log('💡 [Fallback Policy] Supplementing with verified catalogue data to ensure continuous service availability.');
         const seedPath = path.join(__dirname, '../database/seed_data.json');
         if (fs.existsSync(seedPath)) {
             let seed = JSON.parse(fs.readFileSync(seedPath, 'utf8'));

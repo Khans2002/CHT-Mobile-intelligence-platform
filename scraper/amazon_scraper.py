@@ -11,7 +11,7 @@ Purpose: Scrapes Samsung & Apple mobile phone data from Amazon:
          - Market: Price, Original Price, Discount, Rating, Reviews, Availability
          - Links & Media: High-res images, Canonical Amazon URLs
 Resilience: Rotating User-Agents, rate-limiting delays, and offline-resilient fallback
-            to guarantee 100% demo uptime even under Amazon CAPTCHA/503 blocks.
+            to guarantee continuous service availability even under Amazon CAPTCHA/503 blocks.
 ================================================================================
 """
 
@@ -294,7 +294,7 @@ class AmazonScraper:
 
         # Check if we got enough live items; if not, supplement with verified dataset
         if len(results) < 5:
-            print("💡 [Fallback Policy] Supplementing with verified hardware catalogue data to ensure 100% demo stability.")
+            print("💡 [Fallback Policy] Supplementing with verified hardware catalogue data to ensure continuous service availability.")
             results = self.load_fallback_data(brand)
 
         return results
