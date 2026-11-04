@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHT Mobile Intelligence Platform | Amazon Scraper Dashboard</title>
+    <!-- Modern Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand-section">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="nav-title">CHT Mobile Intelligence</h1>
+                    <span class="nav-subtitle">Amazon Scraping & Hardware Spec Analytics Engine</span>
+                </div>
+            </div>
+
+            <div class="nav-stats" id="navStatsPill">
+                <span class="pulse-dot"></span>
+                <span id="navTotalDevices">Tracking 75 Devices</span>
+                <span class="nav-divider">|</span>
+                <span class="badge-apple" id="navAppleCount">Apple: 32</span>
+                <span class="badge-samsung" id="navSamsungCount">Samsung: 43</span>
+                <span class="nav-divider">|</span>
+                <span class="badge-sqlite">SQLite WAL Active</span>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn btn-outline" id="btnOpenCompare" title="Compare selected phones">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="8" height="18" rx="2"></rect>
+                        <rect x="14" y="3" width="8" height="18" rx="2"></rect>
+                    </svg>
+                    Compare (<span id="compareCount">0</span>)
+                </button>
+                <button class="btn btn-primary" id="btnOpenScraperModal">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                    </svg>
+                    Trigger Scraper
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline" id="btnExport">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export Data
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="/api/export?format=csv" download>Download CSV</a>
+                        <a href="/api/export?format=json" download>Download JSON</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-container">
+
+        <!-- METRICS OVERVIEW CARDS -->
+        <section class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper purple">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Market Avg Price</div>
+                    <div class="stat-value" id="statAvgPrice">₹71,005</div>
+                    <div class="stat-sub">Across 75 live listings</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper apple">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.63-.77 1.06-1.84.94-2.91-.91.04-2.02.61-2.67 1.37-.58.67-1.09 1.76-.95 2.81 1.02.08 2.05-.5 2.68-1.27z"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Apple Ecosystem</div>
+                    <div class="stat-value" id="statAppleAvg">₹97,087</div>
+                    <div class="stat-sub" id="statAppleCount">32 iPhones (A16, A17 Pro, A18)</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper samsung">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="10" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Samsung Galaxy</div>
+                    <div class="stat-value" id="statSamsungAvg">₹51,595</div>
+                    <div class="stat-sub" id="statSamsungCount">43 Galaxy (S24, Fold5, A55, M35)</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper green">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Top Rated Flagship</div>
+                    <div class="stat-value" id="statTopRated">4.7 / 5.0</div>
+                    <div class="stat-sub">Galaxy S24 Ultra & iPhone 15 Pro Max</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEARCH HERO SECTION WITH LIVE AUTOCOMPLETE -->
+        <section class="search-section">
+            <div class="search-bar-wrapper">
+                <div class="search-input-group">
+                    <svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input
+                        type="text"
+                        id="mainSearchInput"
+                        class="search-input"
+                        placeholder="Search phones by exact model (e.g. S24 Ultra, iPhone 15 Pro, A55), processor, storage..."
+                        autocomplete="off"
+                    />
+                    <button class="clear-search-btn" id="btnClearSearch" style="display: none;">&times;</button>
+                    <div class="keyboard-badge">Search</div>
+                </div>
+
+                <!-- Instant Autocomplete Dropdown -->
+                <div class="search-dropdown" id="searchDropdown" style="display: none;"></div>
+            </div>
+
+            <!-- Quick search suggestion chips -->
+            <div class="search-chips">
+                <span class="chips-label">Quick Search:</span>
+                <button class="chip" data-search="iPhone 15 Pro Max">iPhone 15 Pro Max</button>
+                <button class="chip" data-search="Galaxy S24 Ultra">Galaxy S24 Ultra</button>
+                <button class="chip" data-search="A17 Pro">A17 Pro Chip</button>
+                <button class="chip" data-search="Snapdragon 8 Gen 3">Snapdragon 8 Gen 3</button>
+                <button class="chip" data-search="512GB">512 GB Storage</button>
+                <button class="chip" data-search="Galaxy A55">Galaxy A55 5G</button>
+                <button class="chip" data-search="iPhone 13">iPhone 13 Budget</button>
+            </div>
+        </section>
+
+        <!-- FILTER & SORT CONTROLS -->
+        <section class="controls-card">
+            <div class="controls-row">
+                <!-- Brand Toggle Tabs -->
+                <div class="brand-tabs">
+                    <button class="brand-tab active" data-brand="All">All Brands (<span id="countAll">75</span>)</button>
+                    <button class="brand-tab" data-brand="Apple">
+                        <span class="tab-indicator apple-dot"></span> Apple (<span id="countApple">32</span>)
+                    </button>
+                    <button class="brand-tab" data-brand="Samsung">
+                        <span class="tab-indicator samsung-dot"></span> Samsung (<span id="countSamsung">43</span>)
+                    </button>
+                </div>
+
+                <!-- Multi-faceted Filters -->
+                <div class="filter-dropdowns">
+                    <div class="filter-group">
+                        <label>Price Range</label>
+                        <select id="filterPricePreset" class="custom-select">
+                            <option value="All">All Prices</option>
+                            <option value="under30k">Under ₹30,000</option>
+                            <option value="30k-70k">₹30,000 - ₹70,000</option>
+                            <option value="70k-100k">₹70,000 - ₹1,00,000</option>
+                            <option value="above100k">Above ₹1,00,000</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>RAM</label>
+                        <select id="filterRam" class="custom-select">
+                            <option value="All">All RAM</option>
+                            <option value="4">4 GB</option>
+                            <option value="6">6 GB</option>
+                            <option value="8">8 GB</option>
+                            <option value="12">12 GB</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Storage</label>
+                        <select id="filterStorage" class="custom-select">
+                            <option value="All">All Storage</option>
+                            <option value="128">128 GB</option>
+                            <option value="256">256 GB</option>
+                            <option value="512">512 GB</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Sort By</label>
+                        <select id="filterSort" class="custom-select">
+                            <option value="rating-desc">Rating: High to Low</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="reviews-desc">Most Reviews</option>
+                            <option value="newest-desc">Newly Added</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline btn-reset" id="btnResetFilters" title="Reset all filters">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS HEADER & ACTIVE FILTERS -->
+        <div class="results-meta-bar">
+            <div>
+                <span class="results-count" id="resultsCount">Showing 75 mobile phones</span>
+                <span class="active-query-tag" id="activeQueryTag" style="display: none;"></span>
+            </div>
+            <div class="view-toggles">
+                <button class="view-btn active" id="btnViewGrid" title="Grid View">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <button class="view-btn" id="btnViewTable" title="Table View">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- PHONES GRID CONTAINER -->
+        <div class="phones-grid" id="phonesGrid">
+            <!-- Dynamically populated by app.js -->
+        </div>
+
+        <!-- PHONES TABLE CONTAINER (Optional view) -->
+        <div class="phones-table-wrapper" id="phonesTableWrapper" style="display: none;">
+            <table class="phones-table">
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Brand</th>
+                        <th>Variant</th>
+                        <th>Specs (RAM / ROM)</th>
+                        <th>Processor</th>
+                        <th>Battery</th>
+                        <th>Price</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="phonesTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION CONTROLS -->
+        <div class="pagination-container" id="paginationContainer">
+            <button class="pagination-btn" id="btnPrevPage" disabled>&larr; Previous</button>
+            <div class="page-numbers" id="pageNumbers"></div>
+            <button class="pagination-btn" id="btnNextPage">Next &rarr;</button>
+        </div>
+
+    </main>
+
+    <!-- DEVICE DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModalOverlay" style="display: none;">
+        <div class="modal-content modal-lg">
+            <button class="modal-close-btn" id="btnCloseDetailModal">&times;</button>
+            <div class="modal-body" id="detailModalBody">
+                <!-- Injected by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPARISON MODAL -->
+    <div class="modal-overlay" id="compareModalOverlay" style="display: none;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header">
+                <h2>Side-by-Side Mobile Comparison</h2>
+                <button class="modal-close-btn" id="btnCloseCompareModal">&times;</button>
+            </div>
+            <div class="modal-body" id="compareModalBody">
+                <!-- Injected by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRAPER TRIGGER & LIVE LOG MODAL -->
+    <div class="modal-overlay" id="scraperModalOverlay" style="display: none;">
+        <div class="modal-content modal-md">
+            <div class="modal-header">
+                <h2>Amazon Scraper Control Panel</h2>
+                <button class="modal-close-btn" id="btnCloseScraperModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">
+                    Trigger the Python Amazon Scraper in the background. The scraper queries Amazon India with randomized user agents, parses mobile phone models, extracts hardware specs, and upserts directly into SQLite.
+                </p>
+
+                <div class="form-group">
+                    <label for="scraperBrandSelect">Target Brand</label>
+                    <select id="scraperBrandSelect" class="custom-select full-width">
+                        <option value="All">All Brands (Apple + Samsung)</option>
+                        <option value="Apple">Apple iPhones Only</option>
+                        <option value="Samsung">Samsung Galaxy Only</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scraperPagesSelect">Pages to Scrape per Search Query</label>
+                    <select id="scraperPagesSelect" class="custom-select full-width">
+                        <option value="1">1 Page (~15-20 listings per query)</option>
+                        <option value="2">2 Pages (~30-40 listings)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary full-width" id="btnExecuteScrape">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Run Python Scraper Now
+                </button>
+
+                <div class="scraper-console" id="scraperConsole">
+                    <div class="console-header">
+                        <span>Terminal Execution Log</span>
+                        <span id="scraperStatusBadge" class="status-idle">Idle</span>
+                    </div>
+                    <pre class="console-body" id="scraperConsoleOutput">Ready. Click "Run Python Scraper Now" to start.</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING COMPARISON TRAY -->
+    <div class="compare-floating-tray" id="compareTray" style="display: none;">
+        <div class="tray-content">
+            <span class="tray-title"><span id="trayCount">0</span> phones selected for comparison</span>
+            <div class="tray-actions">
+                <button class="btn btn-primary btn-sm" id="btnLaunchCompare">Compare Now</button>
+                <button class="btn btn-outline btn-sm" id="btnClearCompare">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
+

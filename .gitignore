@@ -1,0 +1,38 @@
+# =================================================================
+# Git Ignore - CHT Mobile Intelligence Platform
+# =================================================================
+
+# Dependencies
+node_modules/
+package-lock.json.bak
+
+# Python Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# SQLite runtime journal/WAL temporary files (Keep phones.db so demo works instantly)
+database/*.db-wal
+database/*.db-shm
+
+# macOS & System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo

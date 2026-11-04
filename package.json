@@ -1,0 +1,34 @@
+{
+  "name": "cht-mobile-intelligence-platform",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Mobile Intelligence Platform scraping Samsung & Apple phone data from Amazon with Node.js, Express, SQLite, and Python scraper",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "scrape": "node scraper/amazon_scraper.js --brand All --pages 1",
+    "scrape:node": "node scraper/amazon_scraper.js --brand All --pages 1",
+    "scrape:python": "python3 scraper/amazon_scraper.py --brand All --pages 1 --format db",
+    "scrape:apple": "node scraper/amazon_scraper.js --brand Apple --pages 1",
+    "scrape:samsung": "node scraper/amazon_scraper.js --brand Samsung --pages 1",
+    "test": "node -e \"const db = require('./database/db'); console.log('SQLite Ready. Total devices:', db.getStats().totalDevices);\""
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sqlite",
+    "amazon-scraper",
+    "mobile-phones",
+    "samsung",
+    "apple",
+    "intelligence-platform",
+    "search"
+  ],
+  "author": "Mohammed Sameer Khan",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
