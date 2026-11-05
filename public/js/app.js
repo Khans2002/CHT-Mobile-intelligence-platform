@@ -617,7 +617,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="font-size: 1.5rem; font-weight: 800; color: #fff; margin: 8px 0;">${formatINR(p.price)}</div>
                             ${p.original_price && p.original_price > p.price ? `<div style="font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through;">MRP: ${formatINR(p.original_price)} (${p.discount_percent}% off)</div>` : ''}
                             <a href="${p.amazon_url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary full-width" style="margin-top: 14px;">
-                                View on Amazon &rarr;
+                                View on Amazon Store &rarr;
+                            </a>
+                            <a href="https://www.amazon.in/s?k=${encodeURIComponent(p.brand + ' ' + p.model_name)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline full-width" style="margin-top: 8px; font-size: 0.8rem;">
+                                🔍 Search Live on Amazon
                             </a>
                         </div>
                     </div>
